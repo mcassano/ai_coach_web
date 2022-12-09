@@ -37,7 +37,7 @@ repos:
   hooks:
     - id: isort
       args:
-        - --src=src,bin
+        - --src=ai_coach
 
 - repo: https://github.com/PyCQA/pylint
   rev: v2.13.4

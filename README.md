@@ -8,9 +8,21 @@ source my_venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
+# Set up config
+
+```
+export SECRET_KEY=whatevs
+```
+
 # Start the web
 ```
-cd ai_coach
-python3 manage.py migrate
-python3 manage.py runserver
+./manage.py migrate
+./manage.py runserver
+```
+
+
+# Run tests
+
+```
+./manage test
 ```

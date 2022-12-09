@@ -12,3 +12,6 @@ __pycache__
 
 # pycharm
 .idea
+
+# Don't check in databases
+*.sqlite3
