@@ -1,0 +1,14 @@
+my_venv
+.DS_Store
+
+# A scratch directory
+tmp/
+
+__pycache__
+
+# emacs droppings
+*~
+#*#
+
+# pycharm
+.idea
