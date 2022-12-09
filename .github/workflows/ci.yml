@@ -23,6 +23,6 @@ jobs:
     - name: Run Tests
       run: |
         # run unit tests
-        ./manage.py tests
+        ./manage.py test
       env:
         SECRET_KEY: whatevs
