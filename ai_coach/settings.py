@@ -129,7 +129,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
-AUTH_USER_MODEL = "accounts.CustomUser"  # new
-
-ACCOUNT_ACTIVATION_DAYS = 7
-REGISTRATION_AUTO_LOGIN = True
+AUTH_USER_MODEL = "accounts.CustomUser"
