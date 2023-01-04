@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from accounts.models import CustomUser
 
 class Exercise(models.Model):
     PUSHUP = 'Push-up'
@@ -23,7 +22,7 @@ class Workout(models.Model):
     datetime_performed = models.DateTimeField()
     num_sets = models.IntegerField()
     num_reps = models.IntegerField()
-    performed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    performed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     exercise_performed = models.ForeignKey(Exercise, on_delete=models.CASCADE)
 
     def __str__(self):
