@@ -6,13 +6,13 @@ from django.utils import timezone
 
 class WorkoutTestCase(TestCase):
     def setUp(self):
-        Exercise.objects.create(exercise=Exercise.PUSHUP)
-        Exercise.objects.create(exercise=Exercise.FLAPPINGCROSS)
+        Exercise.objects.create(name=Exercise.PUSHUP)
+        Exercise.objects.create(name=Exercise.FLAPPINGCROSS)
         CustomUser.objects.create(username="tom")
 
     def test_workout_is_created_successfully(self):
         """Create a workout with an Exercise and CustomUser"""
-        push_up = Exercise.objects.get(exercise=Exercise.PUSHUP)
+        push_up = Exercise.objects.get(name=Exercise.PUSHUP)
         exerciser = CustomUser.objects.get(username="tom")
 
         workout = Workout.objects.create(datetime_performed=timezone.now(),
