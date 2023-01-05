@@ -1,5 +1,6 @@
 from web.models import Workout, Exercise
 from rest_framework import serializers
+from accounts.serializers import CustomUserSerializer
 
 
 class ExerciseSerializer(serializers.Serializer):
@@ -19,6 +20,7 @@ class WorkoutSerializer(serializers.Serializer):
     num_sets = serializers.IntegerField()
     num_reps = serializers.IntegerField()
     exercise_performed = ExerciseSerializer()
+    performed_by = CustomUserSerializer()
 
     def create(self, validated_data):
         return Workout.objects.create(**validated_data)
