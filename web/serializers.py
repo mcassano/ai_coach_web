@@ -16,11 +16,12 @@ class ExerciseSerializer(serializers.Serializer):
 
 
 class WorkoutSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     datetime_performed = serializers.DateTimeField()
     num_sets = serializers.IntegerField()
     num_reps = serializers.IntegerField()
     exercise_performed = ExerciseSerializer()
-    performed_by = CustomUserSerializer()
+    performed_by = CustomUserSerializer(read_only=True)
 
     def create(self, validated_data):
         return Workout.objects.create(**validated_data)
