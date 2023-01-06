@@ -1,7 +1,6 @@
 from web.models import Workout, Exercise
 from rest_framework import serializers
 from accounts.serializers import CustomUserSerializer
-from django.utils import timezone
 
 
 class ExerciseSerializer(serializers.Serializer):
