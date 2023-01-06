@@ -1,6 +1,7 @@
 from web.models import Workout, Exercise
 from rest_framework import serializers
 from accounts.serializers import CustomUserSerializer
+from django.utils import timezone
 
 
 class ExerciseSerializer(serializers.Serializer):
@@ -24,7 +25,16 @@ class WorkoutSerializer(serializers.Serializer):
     performed_by = CustomUserSerializer(read_only=True)
 
     def create(self, validated_data):
-        return Workout.objects.create(**validated_data)
+        exercise_name = validated_data["exercise_performed"]["name"]
+        exercise = Exercise.objects.get(name=exercise_name)
+        workout = Workout(datetime_performed=validated_data["datetime_performed"],
+                          num_sets=validated_data["num_sets"],
+                          num_reps=validated_data["num_reps"],
+                          exercise_performed=exercise,
+                          performed_by=validated_data["user"]
+                          )
+        workout.save()
+        return workout
 
     def update(self, instance, validated_data):
         instance.datetime_performed = validated_data.get('datetime_performed', instance.datetime_performed)
