@@ -10,7 +10,9 @@ from rest_framework import status
 @api_view(['GET', 'POST'])
 def workout_controller(request):
     if request.method == 'GET':
-        workouts = Workout.objects.all().order_by('datetime_performed')
+        workouts = Workout.objects\
+            .filter(performed_by=request.user)\
+            .order_by('datetime_performed')
         serializer = WorkoutSerializer(workouts, many=True)
         return Response(serializer.data)
 
