@@ -1,6 +1,6 @@
 from django.test import TestCase
 from web.models import Exercise, Workout
-from accounts.models import CustomUser
+from accounts.models import CustomUser, CustomUserAPIKey
 from django.utils import timezone
 
 
@@ -32,6 +32,7 @@ class TestWorkoutViews(TestCase):
         user = CustomUser.objects.create(username='tom')
         user.set_password('123456')
         user.save()
+        key_name, self.api_key = CustomUserAPIKey.objects.create_key(name='tests', user=user)
 
         self.workout = Workout.objects.create(
             datetime_performed=timezone.now(),
@@ -41,9 +42,9 @@ class TestWorkoutViews(TestCase):
             exercise_performed=self.exercise)
 
     def test_workout_can_be_GET(self):
-        """login and get a users single workout"""
-        self.client.login(username='tom', password='123456')
+        """get a users single workout"""
         response = self.client.get('/workouts/',
+                                   HTTP_AUTHORIZATION=f'Api-Key {self.api_key}',
                                    HTTP_ACCEPT='application/json')
 
         self.assertEqual(200,
@@ -58,15 +59,15 @@ class TestWorkoutViews(TestCase):
                          response.data[0]["num_reps"])
 
     def test_workout_can_be_POST(self):
-        """login and post a workout to a user"""
-        self.client.login(username='tom', password='123456')
+        """post a workout to a user"""
         the_post_data = {"exercise_performed": {"name": "Push-up"},
                          "datetime_performed": "2023-01-04T04:20:27Z",
                          "num_sets": 2,
                          "num_reps": 10}
         response = self.client.post(path='/workouts/',
                                     data=the_post_data,
-                                    content_type='application/json')
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION=f'Api-Key {self.api_key}')
 
         self.assertEqual(201,
                          response.status_code)

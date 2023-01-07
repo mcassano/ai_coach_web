@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'web',
     'accounts',
     'rest_framework',
+    "rest_framework_api_key",
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,9 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+   )
+}
