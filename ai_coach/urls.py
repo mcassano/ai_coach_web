@@ -14,5 +14,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls',
                               namespace='rest_framework')),
-    path('workouts/', views.workout_controller),
+    path('exercise-sets/', views.exercise_set_controller),
 ]

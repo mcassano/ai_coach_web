@@ -19,9 +19,8 @@ class Exercise(models.Model):
         return self.name
 
 
-class Workout(models.Model):
+class ExerciseSet(models.Model):
     datetime_performed = models.DateTimeField()
-    num_sets = models.IntegerField()
     num_reps = models.IntegerField()
     performed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     exercise_performed = models.ForeignKey(Exercise, on_delete=models.CASCADE)
@@ -29,5 +28,5 @@ class Workout(models.Model):
     def __str__(self):
         return (f'{self.performed_by} did '
                 f'{self.exercise_performed.name} '
-                f'{self.num_sets}X{self.num_reps} on '
+                f'{self.num_reps} time(s) on '
                 f'{self.datetime_performed}')
