@@ -41,6 +41,3 @@ class WorkoutSerializer(serializers.Serializer):
         instance.num_reps = validated_data.get('num_reps', instance.num_reps)
         instance.save()
         return instance
-
-
-
