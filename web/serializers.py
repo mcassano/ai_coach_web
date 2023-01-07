@@ -1,4 +1,4 @@
-from web.models import Workout, Exercise
+from web.models import ExerciseSet, Exercise
 from rest_framework import serializers
 from accounts.serializers import CustomUserSerializer
 
@@ -15,10 +15,9 @@ class ExerciseSerializer(serializers.Serializer):
         return instance
 
 
-class WorkoutSerializer(serializers.Serializer):
+class ExerciseSetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     datetime_performed = serializers.DateTimeField()
-    num_sets = serializers.IntegerField()
     num_reps = serializers.IntegerField()
     exercise_performed = ExerciseSerializer()
     performed_by = CustomUserSerializer(read_only=True)
@@ -26,18 +25,16 @@ class WorkoutSerializer(serializers.Serializer):
     def create(self, validated_data):
         exercise_name = validated_data["exercise_performed"]["name"]
         exercise = Exercise.objects.get(name=exercise_name)
-        workout = Workout(datetime_performed=validated_data["datetime_performed"],
-                          num_sets=validated_data["num_sets"],
-                          num_reps=validated_data["num_reps"],
-                          exercise_performed=exercise,
-                          performed_by=validated_data["user"]
-                          )
-        workout.save()
-        return workout
+        exercise_set = ExerciseSet(datetime_performed=validated_data["datetime_performed"],
+                              num_reps=validated_data["num_reps"],
+                              exercise_performed=exercise,
+                              performed_by=validated_data["user"]
+                              )
+        exercise_set.save()
+        return exercise_set
 
     def update(self, instance, validated_data):
         instance.datetime_performed = validated_data.get('datetime_performed', instance.datetime_performed)
-        instance.num_sets = validated_data.get('num_sets', instance.num_sets)
         instance.num_reps = validated_data.get('num_reps', instance.num_reps)
         instance.save()
         return instance
