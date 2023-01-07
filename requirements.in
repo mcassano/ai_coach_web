@@ -1,4 +1,4 @@
 Django
 django-registration-redux
 djangorestframework
-
+djangorestframework-api-key
