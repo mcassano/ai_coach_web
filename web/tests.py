@@ -6,8 +6,10 @@ from django.utils import timezone
 
 class ExerciseSetTestCase(TestCase):
     def setUp(self):
-        Exercise.objects.create(name=Exercise.PUSHUP)
-        Exercise.objects.create(name=Exercise.FLAPPINGCROSS)
+        Exercise.objects.create(name=Exercise.PUSHUP, measurement_type=Exercise.CYCLE)
+        Exercise.objects.create(name=Exercise.FLAPPINGCROSS, measurement_type=Exercise.CYCLE)
+        Exercise.objects.create(name=Exercise.PLANK, measurement_type=Exercise.SECOND)
+
         CustomUser.objects.create(username='tom')
 
     def test_exerciseset_is_created_successfully(self):
@@ -16,18 +18,19 @@ class ExerciseSetTestCase(TestCase):
         exerciser = CustomUser.objects.get(username='tom')
 
         ExerciseSet.objects.create(datetime_performed=timezone.now(),
-                                   num_reps=10,
+                                   measurement='10.00',
                                    performed_by=exerciser,
                                    exercise_performed=push_up)
 
         actual = ExerciseSet.objects.get(performed_by=exerciser)
-        self.assertEqual(10, actual.num_reps)
+        self.assertEqual(10.00, actual.measurement)
 
 
 class TestExerciseSetViews(TestCase):
     def setUp(self):
-        self.exercise = Exercise.objects.create(name=Exercise.PUSHUP)
-        Exercise.objects.create(name=Exercise.FLAPPINGCROSS)
+        self.exercise = Exercise.objects.create(name=Exercise.PUSHUP, measurement_type=Exercise.CYCLE)
+        Exercise.objects.create(name=Exercise.FLAPPINGCROSS, measurement_type=Exercise.CYCLE)
+        Exercise.objects.create(name=Exercise.PLANK, measurement_type=Exercise.SECOND)
         user = CustomUser.objects.create(username='tom')
         user.set_password('123456')
         user.save()
@@ -35,7 +38,7 @@ class TestExerciseSetViews(TestCase):
 
         self.exercise_set = ExerciseSet.objects.create(
             datetime_performed=timezone.now(),
-            num_reps=10,
+            measurement='10.00',
             performed_by=user,
             exercise_performed=self.exercise)
 
@@ -51,14 +54,14 @@ class TestExerciseSetViews(TestCase):
                          len(response.data))
         self.assertEqual(self.exercise_set.performed_by.username,
                          response.data[0]["performed_by"]["username"])
-        self.assertEqual(self.exercise_set.num_reps,
-                         response.data[0]["num_reps"])
+        self.assertEqual(self.exercise_set.measurement,
+                         response.data[0]["measurement"])
 
     def test_exercise_set_can_be_POST(self):
         """post an exercise set to a user"""
         the_post_data = {"exercise_performed": {"name": "Push-up"},
                          "datetime_performed": "2023-01-04T04:20:27Z",
-                         "num_reps": 10}
+                         "measurement": '10'}
         response = self.client.post(path='/exercise-sets/',
                                     data=the_post_data,
                                     content_type='application/json',
@@ -66,8 +69,8 @@ class TestExerciseSetViews(TestCase):
 
         self.assertEqual(201,
                          response.status_code)
-        self.assertEqual(10,
-                         response.data["num_reps"])
+        self.assertEqual('10.00',
+                         response.data["measurement"])
         self.assertEqual('Push-up',
                          response.data["exercise_performed"]["name"])
         self.assertEqual('tom',

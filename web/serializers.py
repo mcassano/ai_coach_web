@@ -18,7 +18,7 @@ class ExerciseSerializer(serializers.Serializer):
 class ExerciseSetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     datetime_performed = serializers.DateTimeField()
-    num_reps = serializers.IntegerField()
+    measurement = serializers.DecimalField(max_digits=6, decimal_places=2)
     exercise_performed = ExerciseSerializer()
     performed_by = CustomUserSerializer(read_only=True)
 
@@ -26,7 +26,7 @@ class ExerciseSetSerializer(serializers.Serializer):
         exercise_name = validated_data["exercise_performed"]["name"]
         exercise = Exercise.objects.get(name=exercise_name)
         exercise_set = ExerciseSet(datetime_performed=validated_data["datetime_performed"],
-                              num_reps=validated_data["num_reps"],
+                              measurement=validated_data["measurement"],
                               exercise_performed=exercise,
                               performed_by=validated_data["user"]
                               )
@@ -35,6 +35,6 @@ class ExerciseSetSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         instance.datetime_performed = validated_data.get('datetime_performed', instance.datetime_performed)
-        instance.num_reps = validated_data.get('num_reps', instance.num_reps)
+        instance.measurement = validated_data.get('measurement', instance.measurement)
         instance.save()
         return instance
