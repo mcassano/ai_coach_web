@@ -18,10 +18,12 @@ class ExerciseSetTestCase(TestCase):
         ExerciseSet.objects.create(datetime_performed=timezone.now(),
                                    num_reps=10,
                                    performed_by=exerciser,
-                                   exercise_performed=push_up)
+                                   exercise_performed=push_up,
+                                   duration_seconds=34)
 
         actual = ExerciseSet.objects.get(performed_by=exerciser)
         self.assertEqual(10, actual.num_reps)
+        self.assertEqual(34, actual.duration_seconds)
 
 
 class TestExerciseSetViews(TestCase):
@@ -37,7 +39,8 @@ class TestExerciseSetViews(TestCase):
             datetime_performed=timezone.now(),
             num_reps=10,
             performed_by=user,
-            exercise_performed=self.exercise)
+            exercise_performed=self.exercise,
+            duration_seconds=50)
 
     def test_exercise_set_can_be_GET(self):
         """get a users single exercise set"""
@@ -53,12 +56,15 @@ class TestExerciseSetViews(TestCase):
                          response.data[0]["performed_by"]["username"])
         self.assertEqual(self.exercise_set.num_reps,
                          response.data[0]["num_reps"])
+        self.assertEqual(self.exercise_set.duration_seconds,
+                         response.data[0]["duration_seconds"])
 
     def test_exercise_set_can_be_POST(self):
         """post an exercise set to a user"""
         the_post_data = {"exercise_performed": {"name": "Push-up"},
                          "datetime_performed": "2023-01-04T04:20:27Z",
-                         "num_reps": 10}
+                         "num_reps": 10,
+                         "duration_seconds": 12}
         response = self.client.post(path='/exercise-sets/',
                                     data=the_post_data,
                                     content_type='application/json',
@@ -74,3 +80,5 @@ class TestExerciseSetViews(TestCase):
                          response.data["performed_by"]["username"])
         self.assertEqual('2023-01-04T04:20:27Z',
                          response.data["datetime_performed"])
+        self.assertEqual(12,
+                         response.data["duration_seconds"])
