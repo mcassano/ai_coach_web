@@ -19,18 +19,22 @@ class ExerciseSetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     datetime_performed = serializers.DateTimeField()
     num_reps = serializers.IntegerField()
+    num_target_reps = serializers.IntegerField()
     exercise_performed = ExerciseSerializer()
     performed_by = CustomUserSerializer(read_only=True)
     duration_seconds = serializers.IntegerField()
+    duration_target_seconds = serializers.IntegerField()
 
     def create(self, validated_data):
         exercise_name = validated_data["exercise_performed"]["name"]
         exercise = Exercise.objects.get(name=exercise_name)
         exercise_set = ExerciseSet(datetime_performed=validated_data["datetime_performed"],
                               num_reps=validated_data["num_reps"],
+                              num_target_reps=validated_data["num_target_reps"],
                               exercise_performed=exercise,
                               performed_by=validated_data["user"],
-                              duration_seconds=validated_data["duration_seconds"]
+                              duration_seconds=validated_data["duration_seconds"],
+                              duration_target_seconds=validated_data["duration_target_seconds"]
                               )
         exercise_set.save()
         return exercise_set
